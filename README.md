@@ -20,3 +20,14 @@ ex: `python yolo.py --image images/baggage_claim.jpg --yolo yolo-coco`
 | --confidence | -c       | minimum probability to filter weak detections  |          | 0.5     |
 | --threshold  | -t       | threshold when applying non-maxima suppression |          | 0.3     |
 
+### Video Detector (camera)
+
+ex: `python yolo_video.py --output output/output.avi --yolo yolo-coco`
+
+| Command      | Shortcut | Description                                    | Required | Default |
+|--------------|----------|------------------------------------------------|----------|---------|
+| --image      | -image   | path to image                                  | False    | 1       |
+| --yolo       | -y       | base path to YOLO directory                    | True     |         |
+| --confidence | -c       | minimum probability to filter weak detections  |          | 0.5     |
+| --threshold  | -t       | threshold when applying non-maxima suppression |          | 0.3     |
+
