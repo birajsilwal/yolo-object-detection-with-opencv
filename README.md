@@ -26,7 +26,7 @@ ex: `python yolo_video.py --output output/output.avi --yolo yolo-coco`
 
 | Command      | Shortcut | Description                                    | Required | Default |
 |--------------|----------|------------------------------------------------|----------|---------|
-| --image      | -image   | path to image                                  | False    | 1       |
+| --image      | -image   | path to image                                  | False    | 0       |
 | --yolo       | -y       | base path to YOLO directory                    | True     |         |
 | --confidence | -c       | minimum probability to filter weak detections  |          | 0.5     |
 | --threshold  | -t       | threshold when applying non-maxima suppression |          | 0.3     |
