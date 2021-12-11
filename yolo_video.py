@@ -30,7 +30,7 @@ configPath = os.path.sep.join([args["yolo"], "yolov3.cfg"])
 print("[INFO] loading YOLO from disk...")
 net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
 ln = net.getLayerNames()
-ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+ln = [ln[i - 1] for i in net.getUnconnectedOutLayers()]
 
 # initialize the video stream, pointer to output video file, and
 # frame dimensions
@@ -147,3 +147,5 @@ cv2.destroyAllWindows()
 # python yolo_video.py --input videos/overpass.mp4 --output output/overpass.avi --yolo yolo-coco
 # python yolo_video.py --input videos/car_chase_01.mp4 --output output/car_chase_01.avi --yolo yolo-coco
 # python yolo_video.py --output output/overpass.avi --yolo yolo-coco
+
+# only leg
