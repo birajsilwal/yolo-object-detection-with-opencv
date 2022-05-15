@@ -1,15 +1,14 @@
 # import the necessary packages
-import numpy as np
 import argparse
-import imutils
+import os
 import time
 import cv2
-import os
+import numpy as np
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--input", type=int, default=0, help="id of the camera")
-ap.add_argument("-o", "--output", required=True, help="path to output video")
+ap.add_argument("-o", "--output", required=False, help="path to output video")
 ap.add_argument("-y", "--yolo", required=True, help="base path to YOLO directory")
 ap.add_argument("-c", "--confidence", type=float, default=0.5, help="minimum probability to filter weak detections")
 ap.add_argument("-t", "--threshold", type=float, default=0.3, help="threshold when applying non-maxima suppression")
@@ -91,6 +90,7 @@ while cap.isOpened():
                 # height
                 box = detection[0:4] * np.array([W, H, W, H])
                 (centerX, centerY, width, height) = box.astype("int")
+                # print(centerX, centerY, width, height)
                 # use the center (x, y)-coordinates to derive the top
                 # and and left corner of the bounding box
                 x = int(centerX - (width / 2))
@@ -99,6 +99,7 @@ while cap.isOpened():
                 # confidences, and class IDs
                 boxes.append([x, y, int(width), int(height)])
                 confidences.append(float(confidence))
+                print(float(confidence))
                 classIDs.append(classID)
 
     # apply non-maxima suppression to suppress weak, overlapping
@@ -144,6 +145,7 @@ writer.release()
 cv2.destroyAllWindows()
 
 # example commands
+# python yolo_video.py --input videos/overpass.mp4 --output output/overpass.avi --yolo yolo-coco
 # python yolo_video.py --input videos/overpass.mp4 --output output/overpass.avi --yolo yolo-coco
 # python yolo_video.py --input videos/car_chase_01.mp4 --output output/car_chase_01.avi --yolo yolo-coco
 # python yolo_video.py --output output/overpass.avi --yolo yolo-coco

@@ -1,9 +1,10 @@
 # import the necessary packages
-import numpy as np
 import argparse
-import time
-import cv2
 import os
+import time
+
+import cv2
+import numpy as np
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
@@ -11,9 +12,9 @@ ap.add_argument("-i", "--image", required=True,
                 help="path to input image")
 ap.add_argument("-y", "--yolo", required=True,
                 help="base path to YOLO directory")
-ap.add_argument("-c", "--confidence", type=float, default=0.5,
+ap.add_argument("-c", "--confidence", type=float, default=0.1,
                 help="minimum probability to filter weak detections")
-ap.add_argument("-t", "--threshold", type=float, default=0.3,
+ap.add_argument("-t", "--threshold", type=float, default=0.1,
                 help="threshold when applying non-maxima suppression")
 args = vars(ap.parse_args())
 
@@ -40,7 +41,7 @@ image = cv2.imread(args["image"])
 
 # determine only the *output* layer names that we need from YOLO
 ln = net.getLayerNames()
-ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+ln = [ln[i - 1] for i in net.getUnconnectedOutLayers()]
 
 # construct a blob from the input image and then perform a forward
 # pass of the YOLO object detector, giving us our bounding boxes and
@@ -51,6 +52,9 @@ net.setInput(blob)
 start = time.time()
 layerOutputs = net.forward(ln)
 end = time.time()
+
+tempX = 0
+tempY = 0
 
 # show timing information on YOLO
 print("[INFO] YOLO took {:.6} seconds".format(end - start))
@@ -86,6 +90,9 @@ for output in layerOutputs:
             x = int(centerX - (width / 2))
             y = int(centerY - (height / 2))
 
+            tempY = centerY
+            tempX = centerX
+
             # update our list of bounding box coordinates, confidences,
             # and class IDs
             boxes.append([x, y, int(width), int(height)])
@@ -107,11 +114,15 @@ if len(idxs) > 0:
 
         # draw a bounding box rectangle and label on the image
         color = [int(c) for c in COLORS[classIDs[i]]]
-        cv2.rectangle(image, (x, y), (x+w, y+h), color, 2)
+        cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
         text = "{}: {:.4f}".format(LABELS[classIDs[i]], confidences[i])
         cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
                     0.5, color, 2)
+        cv2.putText(image, "here", (x, y), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5, (0, 0, 255), 2)
 
 # show the output image
 cv2.imshow("Image", image)
 cv2.waitKey(0)
+
+# python yolo_image.py --image images/living_room.jpg --yolo yolo-coco
